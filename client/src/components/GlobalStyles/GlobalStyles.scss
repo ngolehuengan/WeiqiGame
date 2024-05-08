@@ -1,0 +1,48 @@
+@import 'normalize.css';
+
+:root {
+    --primary: #fe2c55;
+    --primary-hover: #fe2c550f;
+    --gray: #161823bf;
+    --gray-light: #1719260f;
+    --gray-lighter: #17192657;
+    --gray-border: #0000001f;
+    --white: #ffffff;
+
+    --check-color: #20d5ec;
+    --background-color: #5dc9e1;
+    --button-color: #306875;
+
+    --default-header-height: 60px;
+    --default-sidebar-width: 240px;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Arial', Arial, Tahoma, PingPangSC, sans-serif;
+    font-size: 1.6rem;
+    line-height: 2.1rem;
+    text-rendering: optimizespeed;
+}
+
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: 1px solid transparent;
+    background: transparent;
+}
+
+a[href] {
+    color: var(--text-color);
+    text-decoration: none;
+}

@@ -1,0 +1,29 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.2rem;
+    border: none;
+    min-height: 3.6rem;
+    font-weight: 500;
+    font-family: 'Arial', Arial, Tahoma, PingPangSC, sans-serif;
+    background: var(--background-color);
+    color: var(--white);
+    border: 0.1rem solid var(--gray-border);
+    width: 11.616rem;
+    padding: 0 1.6rem;
+    margin: 0 auto;
+
+    +.wrapper {
+        margin-top: 1.5rem;
+    }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    &:hover {
+        background: var(--button-color);
+    }
+}
