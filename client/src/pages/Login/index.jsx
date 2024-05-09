@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import styles from './Login.module.scss';
-import { AuthContext } from '~/PrivateRoute/AuthContext';
+import { AuthContext } from '~/components/PrivateRoute/AuthContext';
 import { useContext } from 'react';
 
 const cx = classNames.bind(styles);

@@ -27,3 +27,11 @@
         background: var(--button-color);
     }
 }
+
+.primary {
+    background: var(--primary);
+
+    &:hover{
+        background: var(--primary-hover);
+    }
+}
