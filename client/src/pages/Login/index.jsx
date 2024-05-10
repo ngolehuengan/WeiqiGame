@@ -5,6 +5,7 @@ import Button from '~/components/Button';
 import styles from './Login.module.scss';
 import { AuthContext } from '~/components/PrivateRoute/AuthContext';
 import { useContext } from 'react';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -15,25 +16,35 @@ function Login() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
         // Giả định một yêu cầu API để xác thực thông tin đăng nhập
-        const validUsers = [
-            { username: 'admin', password: '123456' },
-            { username: 'q', password: 'q' },
-        ];
+        // const validUsers = [
+        //     { username: 'admin', password: '123456' },
+        //     { username: 'q', password: 'q' },
+        // ];
 
-        const user = validUsers.find((u) => u.username === username && u.password === password);
+        // const user = validUsers.find((u) => u.username === username && u.password === password);
 
-        if (!user) {
-            setErrorMessage('Tài khoản hoặc mật khẩu không chính xác.');
-            return;
+        //const user = Acc.login(username,password)
+
+        try{
+            const user = await axios.post('/login', { // Gửi yêu cầu POST đến endpoint '/api/login'
+                username, password
+            });
+
+            if (!user) {
+                setErrorMessage('Tài khoản hoặc mật khẩu không chính xác.');
+                return;
+            }
+
+            alert('Đăng nhập thành công!');
+            setIsLoggedIn(true);
+            navigate('/');
+        } catch (error) {
+            setErrorMessage(error.message);
         }
-
-        alert('Đăng nhập thành công!');
-        setIsLoggedIn(true);
-        navigate('/');
     };
 
     return (
