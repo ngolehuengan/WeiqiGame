@@ -1,42 +1,40 @@
+# WeiQi Game
 
-WeiQi Game
 WeiQi Game là một dự án mã nguồn mở cho phép người dùng chơi cờ vây trực tuyến. Dự án này sử dụng Flask làm API backend viết bằng Python và ReactJS Vite làm frontend.
 
-Cài Đặt
-Backend:
+## Cài Đặt
 
-Clone repository từ GitHub:
+### Backend:
 
-bash
-Sao chép mã
-git clone https://github.com/your_username/weiqi-game-backend.git
-Cài đặt các dependencies:
+1. **Clone repository từ GitHub:**
 
-bash
-Sao chép mã
-cd weiqi-game-backend
-pip install -r requirements.txt
-Khởi động server Flask:
+   ```bash
+   git clone https://github.com/ngolehuengan/WeiqiGame.git
+   cd server
 
-Sao chép mã
-python app.py
-Frontend:
+2. **Khởi động server Flask:**
 
-Clone repository từ GitHub:
+   ```bash
+   python main.py
 
-bash
-Sao chép mã
-git clone https://github.com/your_username/weiqi-game-frontend.git
-Cài đặt các dependencies:
+### Frontend:
 
-bash
-Sao chép mã
-cd weiqi-game-frontend
-npm install
-Khởi động development server:
+1. **Clone repository từ GitHub:**
 
-sql
-Sao chép mã
-npm start
-Sử Dụng
+   ```bash
+   git clone https://github.com/ngolehuengan/WeiqiGame.git
+   cd client
+
+2. **Cài đặt các dependencies:**
+
+   ```bash
+   npm install
+
+3. **Khởi động development server:**
+
+   ```bash
+   npm run dev
+
+### Sử dụng:
+
 Sau khi cài đặt và khởi động cả backend và frontend, bạn có thể truy cập vào địa chỉ http://localhost:3000 để trải nghiệm trò chơi WeiQi.
