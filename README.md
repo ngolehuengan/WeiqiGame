@@ -1,6 +1,6 @@
 # WeiQi Game
 
-WeiQi Game là một dự án mã nguồn mở cho phép người dùng chơi cờ vây trực tuyến. Dự án này sử dụng Flask cho API ####BACKEND viết bằng Python và ReactJS Vite cho ####FRONTEND.
+WeiQi Game là một dự án mã nguồn mở cho phép người dùng chơi cờ vây trực tuyến. Dự án này sử dụng Flask cho API Backend viết bằng Python và ReactJS Vite cho Frontend.
 
 ## Cài Đặt
 
