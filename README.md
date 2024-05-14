@@ -12,10 +12,27 @@ WeiQi Game là một dự án mã nguồn mở cho phép người dùng chơi c�
    git clone https://github.com/ngolehuengan/WeiqiGame.git
    cd server
 
-2. **Khởi động server Flask:**
+2. **Giả lập môi trường máy ảo VENV:**
+
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate [Windows]
+   source venv/bin/activate [Linux/Mac]
+
+3. **Cài đặt các dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+
+4. **Khởi động server Flask:**
 
    ```bash
    python main.py
+
+5. **Tắt môi trường ảo VENV:**
+
+   ```bash
+   deactivate
 
 ### Frontend:
 
