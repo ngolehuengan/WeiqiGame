@@ -37,4 +37,4 @@ WeiQi Game là một dự án mã nguồn mở cho phép người dùng chơi c�
 
 ### Sử dụng:
 
-Sau khi cài đặt và khởi động cả backend và frontend, bạn có thể truy cập vào địa chỉ http://localhost:3000 để trải nghiệm trò chơi WeiQi.
+Sau khi cài đặt và khởi động cả Backend và Frontend, bạn có thể truy cập vào địa chỉ http://localhost:3000 để trải nghiệm trò chơi WeiQi.
