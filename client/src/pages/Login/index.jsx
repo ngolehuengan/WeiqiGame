@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import styles from './Login.module.scss';
 import { AuthContext } from '~/components/PrivateRoute/AuthContext';
-import { useContext } from 'react';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -15,25 +15,36 @@ function Login() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
-        // Giả định một yêu cầu API để xác thực thông tin đăng nhập
-        const validUsers = [
-            { username: 'admin', password: '123456' },
-            { username: 'q', password: 'q' },
-        ];
+        try {
+            const response = await axios.post('/api/login', {
+                username,
+                password,
+            });
 
-        const user = validUsers.find((u) => u.username === username && u.password === password);
+            const data = response.data;
 
-        if (!user) {
-            setErrorMessage('Tài khoản hoặc mật khẩu không chính xác.');
-            return;
+            if (data.success) {
+                alert(data.message);
+                setIsLoggedIn(true);
+                navigate('/');
+            } else {
+                setErrorMessage(data.message);
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Error:', error.response.data);
+                setErrorMessage(error.response.data.error);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+                setErrorMessage('Không có phản hồi từ máy chủ. Vui lòng thử lại sau.');
+            } else {
+                console.error('Error:', error.message);
+                setErrorMessage('Đã có lỗi xảy ra.');
+            }
         }
-
-        alert('Đăng nhập thành công!');
-        setIsLoggedIn(true);
-        navigate('/');
     };
 
     return (
