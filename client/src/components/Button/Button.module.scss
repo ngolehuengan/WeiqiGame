@@ -14,7 +14,7 @@
     padding: 0 1.6rem;
     margin: 0 auto;
 
-    +.wrapper {
+    + .wrapper {
         margin-top: 1.5rem;
     }
 
@@ -31,7 +31,23 @@
 .primary {
     background: var(--primary);
 
-    &:hover{
+    &:hover {
         background: var(--primary-hover);
     }
+}
+
+.stones {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.stones.black {
+    background-color: black;
+}
+
+.stones.white {
+    background-color: white;
 }

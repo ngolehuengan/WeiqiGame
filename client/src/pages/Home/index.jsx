@@ -20,13 +20,17 @@ function Home() {
     return (
         <PrivateRoute>
             <div className={cx('wrapper')}>
-                <Button>
-                    <Link to="/play">Chơi</Link>
-                </Button>
-                <Button>
-                    <Link to="/create-room">Tạo phòng</Link>
-                </Button>
-                <Button primary onClick={handleLogOut}>Đăng xuất</Button>
+                <div className={cx('content')}>
+                    <Button>
+                        <Link to="/play">Chơi</Link>
+                    </Button>
+                    <Button>
+                        <Link to="/create-room">Tạo phòng</Link>
+                    </Button>
+                    <Button primary onClick={handleLogOut}>
+                        Đăng xuất
+                    </Button>
+                </div>
             </div>
         </PrivateRoute>
     );

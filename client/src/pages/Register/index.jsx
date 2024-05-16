@@ -36,51 +36,53 @@ function Register() {
 
     return (
         <div className={cx('wrapper')}>
-            <h2>Đăng ký</h2>
-            <form onSubmit={(e) => handleRegister(e)}>
-                <div className={cx('form-group')}>
-                    <label htmlFor="username">Tài khoản:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Nhập tài khoản"
-                        required
-                    />
-                </div>
-                <div className={cx('form-group')}>
-                    <label htmlFor="password">Mật khẩu:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Nhập mật khẩu"
-                        required
-                    />
-                </div>
-                <div className={cx('form-group')}>
-                    <label htmlFor="confirmPassword">Nhập lại mật khẩu:</label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Nhập lại mật khẩu"
-                        required
-                    />
-                </div>
-                {errorMessage && <p className={cx('error-message')}>{errorMessage}</p>}
-                <div className={cx('register-link')}>
-                    <span>Đã có tài khoản? </span>
-                    <Link to="/login">Đăng nhập</Link>
-                </div>
-                <Button type="submit">Đăng ký</Button>
-            </form>
+            <div className={cx('content')}>
+                <h2>Đăng ký</h2>
+                <form onSubmit={(e) => handleRegister(e)}>
+                    <div className={cx('form-group')}>
+                        <label htmlFor="username">Tài khoản:</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Nhập tài khoản"
+                            required
+                        />
+                    </div>
+                    <div className={cx('form-group')}>
+                        <label htmlFor="password">Mật khẩu:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Nhập mật khẩu"
+                            required
+                        />
+                    </div>
+                    <div className={cx('form-group')}>
+                        <label htmlFor="confirmPassword">Nhập lại mật khẩu:</label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Nhập lại mật khẩu"
+                            required
+                        />
+                    </div>
+                    {errorMessage && <p className={cx('error-message')}>{errorMessage}</p>}
+                    <div className={cx('register-link')}>
+                        <span>Đã có tài khoản? </span>
+                        <Link to="/login">Đăng nhập</Link>
+                    </div>
+                    <Button type="submit">Đăng ký</Button>
+                </form>
+            </div>
         </div>
     );
 }
