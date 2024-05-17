@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Board.module.scss';
 import images from '~/assets/images';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -113,37 +114,56 @@ function Board({ size }) {
             }
             let clickedSquareX = parseInt(clickedSquare.id.charAt(0));
             let clickedSquareY = parseInt(clickedSquare.id.charAt(1));
+            console.log(clickedSquareX);
+            console.log(clickedSquareY);
             let clickedSquareCoordinates = [clickedSquareX, clickedSquareY];
             let pieceColor = isBlackTurn ? 1 : 2;
             boardCellsArray[clickedSquareX][clickedSquareY] = pieceColor;
-            let captures = checkCaptures(boardCellsArray, [clickedSquareX, clickedSquareY]);
-            if (captures.length > 0) {
-                if (!isValidCaptureMove(captures, clickedSquareCoordinates)) {
-                    boardCellsArray[clickedSquareX][clickedSquareY] = 0;
-                    captures.length = 0;
-                    let alertMessage =
-                        iskoMove && clickedSquareCoordinates.every((v, i) => v === koPoint[i])
-                            ? 'Nước đi không hợp lệ do vi phạm luật Ko!'
-                            : 'Không được phép thực hiện nước đi tự bắt quân!';
-                    showAlert(alertMessage);
-                    return;
-                }
-                captures.forEach(([x, y]) => removePiece(x, y));
-                updateBoardArray(captures);
-            }
-            if (captures.length === 0) {
-                iskoMove = false;
-            }
+            // let captures = checkCaptures(boardCellsArray, [clickedSquareX, clickedSquareY]);
 
-            let color = isBlackTurn ? 'black' : 'white';
-            var piece = document.createElement('div');
-            piece.className = `${styles.piece} ${styles.color}`;
-            let pieceImage = document.createElement('img');
-            pieceImage.src = images[color];
-            piece.appendChild(pieceImage);
-            clickedSquare.appendChild(piece);
-            isBlackTurn = !isBlackTurn;
+            let captures = [];
+            axios.post('/api/check_captures', {
+                board: boardCellsArray,
+                last_move: [clickedSquareX, clickedSquareY],
+            })
+            .then(response => {
+                captures = response.data;
+                if (captures.length > 0) {
+                    if (!isValidCaptureMove(captures, clickedSquareCoordinates)) {
+                        boardCellsArray[clickedSquareX][clickedSquareY] = 0;
+                        captures.length = 0;
+                        let alertMessage =
+                            iskoMove && clickedSquareCoordinates.every((v, i) => v === koPoint[i])
+                                ? 'Move not allowed due to the Ko rule!'
+                                : 'Self capture is not allowed!';
+                        showAlert(alertMessage);
+                        return;
+                    }
+                    captures.forEach(([x, y]) => removePiece(x, y));
+                    updateBoardArray(captures);
+                }
+                if (captures.length === 0) {
+                    iskoMove = false;
+                }
+        
+                let color = isBlackTurn ? 'black' : 'white';
+                var piece = document.createElement('div');
+                piece.className = `${styles.piece} ${styles.color}`;
+                let pieceImage = document.createElement('img');
+                pieceImage.src = images[color];
+                piece.appendChild(pieceImage);
+                clickedSquare.appendChild(piece);
+                isBlackTurn = !isBlackTurn;
+            })
+            .catch(error => {
+                console.error('Error checking captures:', error);
+            });
         }
+
+        function handlePieceInsertion(event) {
+            insertPiece(event);
+        }
+
         function addColumnCoordinates() {
             for (let i = 0; i < size + 2; i++) {
                 let coord = document.createElement('div');
@@ -167,77 +187,77 @@ function Board({ size }) {
             cell.appendChild(starPoint);
         }
 
-        function checkCaptures(board, lastMove) {
-            let captures = [];
-            let visited = Array(board.length)
-                .fill()
-                .map(() => Array(board.length).fill(false));
-            let dx = [-1, 0, 1, 0];
-            let dy = [0, 1, 0, -1];
+        // function checkCaptures(board, lastMove) {
+        //     let captures = [];
+        //     let visited = Array(board.length)
+        //         .fill()
+        //         .map(() => Array(board.length).fill(false));
+        //     let dx = [-1, 0, 1, 0];
+        //     let dy = [0, 1, 0, -1];
 
-            for (let i = 0; i < board.length; i++) {
-                for (let j = 0; j < board.length; j++) {
-                    if (board[i][j] !== 0 && !visited[i][j]) {
-                        let capturedGroup = bfs(i, j, board, visited);
-                        captures.push(...capturedGroup);
-                    }
-                }
-            }
-            if (lastMove) {
-                let [x, y] = lastMove;
-                for (let i = 0; i < 4; i++) {
-                    let nx = x + dx[i];
-                    let ny = y + dy[i];
-                    if (
-                        nx > 0 &&
-                        ny >= 0 &&
-                        nx < board.length &&
-                        ny < board.length &&
-                        board[nx][ny] !== 0 &&
-                        !visited[nx][ny]
-                    ) {
-                        let capturedGroup = bfs(nx, ny, board, visited);
-                        captures.push(...capturedGroup);
-                    }
-                }
-            }
-            return captures;
-        }
+        //     for (let i = 0; i < board.length; i++) {
+        //         for (let j = 0; j < board.length; j++) {
+        //             if (board[i][j] !== 0 && !visited[i][j]) {
+        //                 let capturedGroup = bfs(i, j, board, visited);
+        //                 captures.push(...capturedGroup);
+        //             }
+        //         }
+        //     }
+        //     if (lastMove) {
+        //         let [x, y] = lastMove;
+        //         for (let i = 0; i < 4; i++) {
+        //             let nx = x + dx[i];
+        //             let ny = y + dy[i];
+        //             if (
+        //                 nx > 0 &&
+        //                 ny >= 0 &&
+        //                 nx < board.length &&
+        //                 ny < board.length &&
+        //                 board[nx][ny] !== 0 &&
+        //                 !visited[nx][ny]
+        //             ) {
+        //                 let capturedGroup = bfs(nx, ny, board, visited);
+        //                 captures.push(...capturedGroup);
+        //             }
+        //         }
+        //     }
+        //     return captures;
+        // }
 
-        function bfs(x, y, board, visited) {
-            let dx = [-1, 0, 1, 0];
-            let dy = [0, 1, 0, -1];
-            let color = board[x][y];
-            let queue = [[x, y]];
-            let group = [[x, y]];
-            visited[x][y] = true;
-            let hasLiberty = false;
+        // function bfs(x, y, board, visited) {
+        //     let dx = [-1, 0, 1, 0];
+        //     let dy = [0, 1, 0, -1];
+        //     let color = board[x][y];
+        //     let queue = [[x, y]];
+        //     let group = [[x, y]];
+        //     visited[x][y] = true;
+        //     let hasLiberty = false;
 
-            while (queue.length > 0) {
-                let [cx, cy] = queue.shift();
-                for (let i = 0; i < 4; i++) {
-                    let nx = cx + dx[i];
-                    let ny = cy + dy[i];
-                    if (
-                        nx >= 0 &&
-                        ny >= 0 &&
-                        nx < board.length &&
-                        ny < board.length &&
-                        !visited[nx][ny]
-                    ) {
-                        if (board[nx][ny] === color) {
-                            queue.push([nx, ny]);
-                            group.push([nx, ny]);
-                            visited[nx][ny] = true;
-                        } else if (board[nx][ny] === 0) {
-                            hasLiberty = true;
-                        }
-                    }
-                }
-            }
+        //     while (queue.length > 0) {
+        //         let [cx, cy] = queue.shift();
+        //         for (let i = 0; i < 4; i++) {
+        //             let nx = cx + dx[i];
+        //             let ny = cy + dy[i];
+        //             if (
+        //                 nx >= 0 &&
+        //                 ny >= 0 &&
+        //                 nx < board.length &&
+        //                 ny < board.length &&
+        //                 !visited[nx][ny]
+        //             ) {
+        //                 if (board[nx][ny] === color) {
+        //                     queue.push([nx, ny]);
+        //                     group.push([nx, ny]);
+        //                     visited[nx][ny] = true;
+        //                 } else if (board[nx][ny] === 0) {
+        //                     hasLiberty = true;
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            return hasLiberty ? [] : group;
-        }
+        //     return hasLiberty ? [] : group;
+        // }
 
         function removePiece(x, y) {
             let squareId = x.toString() + y.toString();
