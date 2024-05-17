@@ -122,42 +122,44 @@ function Board({ size }) {
             // let captures = checkCaptures(boardCellsArray, [clickedSquareX, clickedSquareY]);
 
             let captures = [];
-            axios.post('/api/check_captures', {
-                board: boardCellsArray,
-                last_move: [clickedSquareX, clickedSquareY],
-            })
-            .then(response => {
-                captures = response.data;
-                if (captures.length > 0) {
-                    if (!isValidCaptureMove(captures, clickedSquareCoordinates)) {
-                        boardCellsArray[clickedSquareX][clickedSquareY] = 0;
-                        captures.length = 0;
-                        let alertMessage =
-                            iskoMove && clickedSquareCoordinates.every((v, i) => v === koPoint[i])
-                                ? 'Move not allowed due to the Ko rule!'
-                                : 'Self capture is not allowed!';
-                        showAlert(alertMessage);
-                        return;
+            axios
+                .post('/api/check_captures', {
+                    board: boardCellsArray,
+                    last_move: [clickedSquareX, clickedSquareY],
+                })
+                .then((response) => {
+                    captures = response.data;
+                    if (captures.length > 0) {
+                        if (!isValidCaptureMove(captures, clickedSquareCoordinates)) {
+                            boardCellsArray[clickedSquareX][clickedSquareY] = 0;
+                            captures.length = 0;
+                            let alertMessage =
+                                iskoMove &&
+                                clickedSquareCoordinates.every((v, i) => v === koPoint[i])
+                                    ? 'Nước đi không hợp lệ do vi phạm luật Ko!'
+                                    : 'Không được phép thực hiện nước đi tự bắt quân!';
+                            showAlert(alertMessage);
+                            return;
+                        }
+                        captures.forEach(([x, y]) => removePiece(x, y));
+                        updateBoardArray(captures);
                     }
-                    captures.forEach(([x, y]) => removePiece(x, y));
-                    updateBoardArray(captures);
-                }
-                if (captures.length === 0) {
-                    iskoMove = false;
-                }
-        
-                let color = isBlackTurn ? 'black' : 'white';
-                var piece = document.createElement('div');
-                piece.className = `${styles.piece} ${styles.color}`;
-                let pieceImage = document.createElement('img');
-                pieceImage.src = images[color];
-                piece.appendChild(pieceImage);
-                clickedSquare.appendChild(piece);
-                isBlackTurn = !isBlackTurn;
-            })
-            .catch(error => {
-                console.error('Error checking captures:', error);
-            });
+                    if (captures.length === 0) {
+                        iskoMove = false;
+                    }
+
+                    let color = isBlackTurn ? 'black' : 'white';
+                    var piece = document.createElement('div');
+                    piece.className = `${styles.piece} ${styles.color}`;
+                    let pieceImage = document.createElement('img');
+                    pieceImage.src = images[color];
+                    piece.appendChild(pieceImage);
+                    clickedSquare.appendChild(piece);
+                    isBlackTurn = !isBlackTurn;
+                })
+                .catch((error) => {
+                    console.error('Error checking captures:', error);
+                });
         }
 
         function handlePieceInsertion(event) {
