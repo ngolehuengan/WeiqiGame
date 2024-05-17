@@ -14,6 +14,7 @@ function Board({ size }) {
                 return true;
             }
             event.preventDefault();
+            event.returnValue = '';
             return false;
         };
 
@@ -79,12 +80,8 @@ function Board({ size }) {
                             verticalLine.style.height = '50%';
                         }
                         if (
-                            (j == 2 + temp &&
-                                (i == j || i == (size - 1) / 2 || i == size - temp - 3)) ||
-                            (j == (size - 1) / 2 &&
-                                (i == 2 + temp || i == size - temp - 3 || i == (size - 1) / 2)) ||
-                            (j == size - temp - 3 &&
-                                (i == 2 + temp || i == (size - 1) / 2 || i == j))
+                            (j == 2 + temp || j == (size - 1) / 2 || j == size - temp - 3) &&
+                            (i == j || i == (size - 1) / 2 || i == size - temp - 3 || i == temp + 2)
                         ) {
                             addStarPoint(cell);
                         }
