@@ -1,10 +1,16 @@
+.wrapper{
+    padding: 1rem;
+    border: 0.1rem solid #000;
+    background-image: url(~/assets/images/wood.jpg);
+}
 .goBoard {
     display: grid;
     gap: 0;
-    width: 75rem;
-    height: 75rem;
+    width: 73rem;
+    height: 73rem;
     background-image: url(~/assets/images/wood.jpg);
     background-size: cover;
+    border: 0.1rem solid #000;
 }
 .cell {
     position: relative;

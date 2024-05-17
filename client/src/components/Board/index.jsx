@@ -295,7 +295,13 @@ function Board({ size }) {
             alert(message);
         }
     }, [size]);
-    return <div ref={gameBoardRef} className={cx('goBoard')}></div>;
+    return (
+        <div className={cx('wrapper')}>
+            <div className={cx('wrapper')}>
+                <div ref={gameBoardRef} className={cx('goBoard')} />
+            </div>
+        </div>
+    );
 }
 
 export default Board;
