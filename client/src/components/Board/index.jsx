@@ -9,6 +9,21 @@ const cx = classNames.bind(styles);
 function Board({ size }) {
     const gameBoardRef = useRef(null);
     useEffect(() => {
+        const handleUnload = (event) => {
+            if (window.confirm()) {
+                return true;
+            }
+            event.preventDefault();
+            return false;
+        };
+
+        window.addEventListener('beforeunload', handleUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleUnload);
+        };
+    }, []);
+    useEffect(() => {
         const gameBoard = gameBoardRef.current;
         let isBlackTurn = true;
         const alphabet = 'ABCDEFGHJKLMNOPQRST';
@@ -66,10 +81,10 @@ function Board({ size }) {
                         if (
                             (j == 2 + temp &&
                                 (i == j || i == (size - 1) / 2 || i == size - temp - 3)) ||
-                            (j == (size - 1) / 2 && (i == 2 + temp || i == size - temp - 3)) ||
+                            (j == (size - 1) / 2 &&
+                                (i == 2 + temp || i == size - temp - 3 || i == (size - 1) / 2)) ||
                             (j == size - temp - 3 &&
-                                (i == 2 + temp || i == (size - 1) / 2 || i == j)) ||
-                            (j == (size - 1) / 2 && i == (size - 1) / 2)
+                                (i == 2 + temp || i == (size - 1) / 2 || i == j))
                         ) {
                             addStarPoint(cell);
                         }
@@ -111,8 +126,8 @@ function Board({ size }) {
                     captures.length = 0;
                     let alertMessage =
                         iskoMove && clickedSquareCoordinates.every((v, i) => v === koPoint[i])
-                            ? 'Move not allowed due to the Ko rule!'
-                            : 'Self capture is not allowed!';
+                            ? 'Nước đi không hợp lệ do vi phạm luật Ko!'
+                            : 'Không được phép thực hiện nước đi tự bắt quân!';
                     showAlert(alertMessage);
                     return;
                 }

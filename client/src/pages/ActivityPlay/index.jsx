@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import Board from '~/components/Board';
 import Button from '~/components/Button';
 import styles from './ActivityPlay.module.scss';
+import { PrivateRoute } from '~/components/PrivateRoute';
 
 const cx = classNames.bind(styles);
 
@@ -16,7 +17,7 @@ const ActivityPlay = () => {
     };
 
     return (
-        <div>
+        <PrivateRoute>
             {showPopup && (
                 <div className={cx('popup-overlay')}>
                     <div className={cx('popup-content')}>
@@ -28,7 +29,7 @@ const ActivityPlay = () => {
                 </div>
             )}
             {boardSize && <Board size={boardSize} />}
-        </div>
+        </PrivateRoute>
     );
 };
 
