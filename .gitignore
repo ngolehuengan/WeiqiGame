@@ -1,0 +1,6 @@
+.DS_Store
+.vscode
+server/venv
+*.pyc
+/server/services/__pycache__
+/server/controllers/__pycache__
