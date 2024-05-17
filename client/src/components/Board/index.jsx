@@ -136,8 +136,8 @@ function Board({ size }) {
                             let alertMessage =
                                 iskoMove &&
                                 clickedSquareCoordinates.every((v, i) => v === koPoint[i])
-                                    ? 'Move not allowed due to the Ko rule!'
-                                    : 'Self capture is not allowed!';
+                                    ? 'Nước đi không hợp lệ do vi phạm luật Ko!'
+                                    : 'Không được phép thực hiện nước đi tự bắt quân!';
                             showAlert(alertMessage);
                             return;
                         }
