@@ -1,4 +1,5 @@
 install
 Flask
 Flask-CORS
+Flask-SocketIO
 mysql-connector-python
