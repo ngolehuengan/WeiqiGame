@@ -106,16 +106,13 @@ function Board({ size }) {
                 return;
             }
 
-            if (
-                clickedSquare.classList.contains(styles.line) ||
-                clickedSquare.classList.contains(styles.star)
-            ) {
+            if (clickedSquare.classList.contains(styles.line) || clickedSquare.classList.contains(styles.star)) {
                 clickedSquare = clickedSquare.parentNode;
             }
             let clickedSquareX = parseInt(clickedSquare.id.charAt(0));
             let clickedSquareY = parseInt(clickedSquare.id.charAt(1));
-            console.log(clickedSquareX);
-            console.log(clickedSquareY);
+            // console.log(clickedSquareX);
+            // console.log(clickedSquareY);
             let clickedSquareCoordinates = [clickedSquareX, clickedSquareY];
             let pieceColor = isBlackTurn ? 1 : 2;
             boardCellsArray[clickedSquareX][clickedSquareY] = pieceColor;
@@ -127,22 +124,34 @@ function Board({ size }) {
                     board: boardCellsArray,
                     last_move: [clickedSquareX, clickedSquareY],
                 })
-                .then((response) => {
+                .then((response) => {   
                     captures = response.data;
+                    console.log(captures);
                     if (captures.length > 0) {
-                        if (!isValidCaptureMove(captures, clickedSquareCoordinates)) {
-                            boardCellsArray[clickedSquareX][clickedSquareY] = 0;
-                            captures.length = 0;
-                            let alertMessage =
-                                iskoMove &&
-                                clickedSquareCoordinates.every((v, i) => v === koPoint[i])
-                                    ? 'Nước đi không hợp lệ do vi phạm luật Ko!'
-                                    : 'Không được phép thực hiện nước đi tự bắt quân!';
-                            showAlert(alertMessage);
-                            return;
-                        }
-                        captures.forEach(([x, y]) => removePiece(x, y));
-                        updateBoardArray(captures);
+                        // axios.post('/api/is_valid_capture_move', {
+                        //         boardCellsArray: boardCellsArray,
+                        //         isBlackTurn: pieceColor,
+                        //         captures: captures,
+                        //         clicked_square_coordinates: clickedSquareCoordinates,
+                        // }).then((validResponse) => {
+                        //     console.log(validResponse);
+                            if (!isValidCaptureMove(boardCellsArray, pieceColor, captures, clickedSquareCoordinates)) {
+                                boardCellsArray[clickedSquareX][clickedSquareY] = 0;
+                                captures.length = 0;
+                                let alertMessage =
+                                    iskoMove &&
+                                    clickedSquareCoordinates.every((v, i) => v === koPoint[i])
+                                        ? 'Nước đi không hợp lệ do vi phạm luật Ko!'
+                                        : 'Không được phép thực hiện nước đi tự bắt quân!';
+                                showAlert(alertMessage);
+                                return;
+                            } else {
+                            captures.forEach(([x, y]) => removePiece(x, y));
+                            updateBoardArray(captures);
+                            }
+                        // }).catch((validError) => {
+                        //     console.error('Error checking validity:', validError);
+                        // });
                     }
                     if (captures.length === 0) {
                         iskoMove = false;
@@ -160,10 +169,6 @@ function Board({ size }) {
                 .catch((error) => {
                     console.error('Error checking captures:', error);
                 });
-        }
-
-        function handlePieceInsertion(event) {
-            insertPiece(event);
         }
 
         function addColumnCoordinates() {
@@ -187,6 +192,52 @@ function Board({ size }) {
             starPoint.className = styles.star;
             starPoint.innerHTML = '•';
             cell.appendChild(starPoint);
+        }
+
+        function removePiece(x, y) {
+            let squareId = x.toString() + y.toString();
+            let square = document.getElementById(squareId);
+            let children = square.childNodes;
+            for (let i = children.length - 1; i >= 0; i--) {
+                if (
+                    !children[i].classList.contains(styles.line) &&
+                    !children[i].classList.contains(styles.star)
+                ) {
+                    square.removeChild(children[i]);
+                }
+            }
+        }
+
+        function updateBoardArray(captures) {
+            let turn = isBlackTurn ? 1 : 2;
+            captures.forEach((element) => {
+                if (turn != boardCellsArray[element[0]][element[1]])
+                    boardCellsArray[element[0]][element[1]] = 0;
+            });
+        }
+
+        function isValidCaptureMove(boardCellsArray, isBlackTurn, captures, clickedSquareCoordinates) {
+            $.ajax({
+                type: 'POST', // Thay đổi type thành POST
+                url: '/api/is_valid_capture_move', // Điều chỉnh url
+                contentType: 'application/json', // Đảm bảo contentType là JSON
+                data: JSON.stringify({ // Chuyển đổi dữ liệu sang JSON
+                    boardCellsArray: boardCellsArray,
+                    isBlackTurn: isBlackTurn,
+                    captures: captures,
+                    clicked_square_coordinates: clickedSquareCoordinates
+                }),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success && response.is_valid) {
+                        // Thực hiện hành động khi nước đi hợp lệ
+                        console.log('Valid move');
+                    } else {
+                        // Thực hiện hành động khi nước đi không hợp lệ
+                        console.log('Invalid move');
+                    }
+                }
+            });
         }
 
         // function checkCaptures(board, lastMove) {
@@ -261,57 +312,35 @@ function Board({ size }) {
         //     return hasLiberty ? [] : group;
         // }
 
-        function removePiece(x, y) {
-            let squareId = x.toString() + y.toString();
-            let square = document.getElementById(squareId);
-            let children = square.childNodes;
-            for (let i = children.length - 1; i >= 0; i--) {
-                if (
-                    !children[i].classList.contains(styles.line) &&
-                    !children[i].classList.contains(styles.star)
-                ) {
-                    square.removeChild(children[i]);
-                }
-            }
-        }
-
-        function updateBoardArray(captures) {
-            let turn = isBlackTurn ? 1 : 2;
-            captures.forEach((element) => {
-                if (turn != boardCellsArray[element[0]][element[1]])
-                    boardCellsArray[element[0]][element[1]] = 0;
-            });
-        }
-
-        function isValidCaptureMove(captures, clickedSquareCoordinates) {
-            let colors = [];
-            captures.forEach((element) => {
-                let x = element[0];
-                let y = element[1];
-                let color = boardCellsArray[x][y];
-                colors.push(color);
-            });
-            let allCapturedSameColor = colors.every((element) => element === colors[0]);
-            let selfCapture = (isBlackTurn && colors[0] == 1) || (!isBlackTurn && colors[0] == 2);
-            if (allCapturedSameColor && selfCapture) return false;
-            let turn = isBlackTurn ? 1 : 2;
-            if (
-                !allCapturedSameColor &&
-                iskoMove &&
-                clickedSquareCoordinates[0] == koPoint[0] &&
-                clickedSquareCoordinates[1] == koPoint[1]
-            ) {
-                return false;
-            }
-            iskoMove = !allCapturedSameColor;
-            captures.forEach((element) => {
-                if (turn != boardCellsArray[element[0]][element[1]]) {
-                    clickedSquareCoordinates = element;
-                }
-            });
-            koPoint = iskoMove ? clickedSquareCoordinates : [-1, 1];
-            return true;
-        }
+        // function isValidCaptureMove(captures, clickedSquareCoordinates) {
+        //     let colors = [];
+        //     captures.forEach((element) => {
+        //         let x = element[0];
+        //         let y = element[1];
+        //         let color = boardCellsArray[x][y];
+        //         colors.push(color);
+        //     });
+        //     let allCapturedSameColor = colors.every((element) => element === colors[0]);
+        //     let selfCapture = (isBlackTurn && colors[0] == 1) || (!isBlackTurn && colors[0] == 2);
+        //     if (allCapturedSameColor && selfCapture) return false;
+        //     let turn = isBlackTurn ? 1 : 2;
+        //     if (
+        //         !allCapturedSameColor &&
+        //         iskoMove &&
+        //         clickedSquareCoordinates[0] == koPoint[0] &&
+        //         clickedSquareCoordinates[1] == koPoint[1]
+        //     ) {
+        //         return false;
+        //     }
+        //     iskoMove = !allCapturedSameColor;
+        //     captures.forEach((element) => {
+        //         if (turn != boardCellsArray[element[0]][element[1]]) {
+        //             clickedSquareCoordinates = element;
+        //         }
+        //     });
+        //     koPoint = iskoMove ? clickedSquareCoordinates : [-1, 1];
+        //     return true;
+        // }
 
         function showAlert(message) {
             alert(message);

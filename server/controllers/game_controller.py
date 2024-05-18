@@ -3,15 +3,6 @@ from services.game1 import check_capture
 
 captures_bp = Blueprint('check_captures', __name__)
 
-@captures_bp.route('/api/check_captures', methods=['OPTIONS'])
-def options_check_captures():
-    response = make_response()
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    response.headers['Access-Control-Allow-Credentials'] = 'true'
-    return response
-
 @captures_bp.route('/api/check_captures', methods=['POST'])
 def check_captures():
     try:
@@ -31,5 +22,29 @@ def check_captures():
                 return jsonify({'success': False, 'message': 'Không có bắt quân.'}), 200
         else:
             return jsonify({'success': False, 'message': 'Yêu cầu không phải là JSON.'}), 400
+    except Exception as e:
+        return jsonify({'success': False, 'message': 'Lỗi không xác định.', 'details': str(e)}), 500
+    
+    
+captures_valid = Blueprint('is_valid_capture_move', __name__)
+
+@captures_valid.route('/api/is_valid_capture_move', methods=['POST'])
+def is_valid_capture_move():
+    try:
+        data = request.get_json()
+        boardCellsArray = data.get('boardCellsArray')
+        isBlackTurn = data.get('isBlackTurn')
+        captures = data.get('captures')
+        clicked_square_coordinates = data.get('clicked_square_coordinates')
+        
+        # Kiểm tra xem dữ liệu đầu vào có hợp lệ không
+        if not captures or not clicked_square_coordinates:
+            return jsonify({'success': False, 'message': 'Vui lòng cung cấp dữ liệu hợp lệ.'}), 400
+
+        # Gọi hàm kiểm tra từ module hoặc service
+        is_valid = is_valid_capture_move(boardCellsArray, isBlackTurn, captures, clicked_square_coordinates)
+        
+        # Trả về kết quả
+        return jsonify({'success': True, 'is_valid': is_valid}), 200
     except Exception as e:
         return jsonify({'success': False, 'message': 'Lỗi không xác định.', 'details': str(e)}), 500
